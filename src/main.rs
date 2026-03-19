@@ -2,6 +2,10 @@ use std::cmp::Ordering;
 use std::io;
 use rand::Rng;
 
+// variables are always implicitly immutable 
+// to make a variable mutable use keyword mut
+// No need to state a return keyword in some cases it seems 
+
 #[derive(PartialEq)] // to use == with the enum
 enum Difficulty {
     Hard,
@@ -9,11 +13,11 @@ enum Difficulty {
     Easy,
     Fail,
 }
-
+ 
 fn checker(secret_number: u32, guess: u32) -> bool {
     match guess.cmp(&secret_number) {
         Ordering::Less => { 
-            println!("Too small!");
+            println!("Too small!"); 
             false
         }
         Ordering::Greater => {
@@ -43,6 +47,8 @@ fn ask_for_difficulty() -> Difficulty {
     }
 }
 
+// rand::thread_rng().gen_range() generates a random number on this current thread 
+// it is also seeded
 fn generate_number(dif: Difficulty) -> u32 {
     match dif {
         Difficulty::Hard => rand::thread_rng().gen_range(1..=1000),
@@ -55,7 +61,6 @@ fn generate_number(dif: Difficulty) -> u32 {
 fn main() {
     let dif = ask_for_difficulty();
 
-    // Use == for comparison
     if dif == Difficulty::Fail {
         println!("Invalid difficulty. Goodbye!");
         return;
@@ -74,7 +79,6 @@ fn main() {
             .read_line(&mut guess)
             .expect("Failed to read the line!");
 
-        // Changed type from 'num' to 'u32'
         let guess: u32 = match guess.trim().parse() {
             Ok(num) => num,
             Err(_) => {
@@ -84,8 +88,7 @@ fn main() {
         };
 
         println!("You guessed: {guess}");
-        
-        // Pass value, not reference, to match checker's signature
+          
         if checker(secret_number, guess) {
             println!("It took you {guess_count} number of guesses :)");
             break;
